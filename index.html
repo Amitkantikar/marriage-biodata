@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marriage Biodata Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Marriage Biodata Generator</h1>
+
+        <form id="biodataForm">
+            <h2>Personal Details</h2>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="dob" placeholder="Date of Birth (DD-MM-YYYY)">
+            <input type="text" id="age" placeholder="Age">
+            <input type="text" id="height" placeholder="Height (e.g., 5'8'')">
+            <input type="text" id="weight" placeholder="Weight (optional)">
+            <input type="text" id="religion" placeholder="Religion">
+            <input type="text" id="caste" placeholder="Caste (optional)">
+            <input type="text" id="motherTongue" placeholder="Mother Tongue">
+            <input type="text" id="job" placeholder="Profession / Job">
+            <input type="text" id="education" placeholder="Education">
+
+            <h2>Family Details</h2>
+            <textarea id="familyDetails" placeholder="Family Details"></textarea>
+
+            <h2>Contact</h2>
+            <input type="text" id="phone" placeholder="Phone Number">
+            <input type="text" id="email" placeholder="Email">
+
+            <button type="button" onclick="generatePDF()">Generate Biodata PDF</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
