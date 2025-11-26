@@ -12,6 +12,10 @@
         <h1>Marriage Biodata Generator</h1>
 
         <form id="biodataForm">
+
+            <h2>Upload Photo</h2>
+            <input type="file" id="photo" accept="image/*">
+
             <h2>Personal Details</h2>
             <input type="text" id="fullName" placeholder="Full Name" required>
             <input type="text" id="dob" placeholder="Date of Birth (DD-MM-YYYY)">
@@ -28,8 +32,8 @@
             <textarea id="familyDetails" placeholder="Family Details"></textarea>
 
             <h2>Contact</h2>
-            <input type="text" id="phone" placeholder="Phone Number">
-            <input type="text" id="email" placeholder="Email">
+            <input type="text" id="phone" placeholder="Phone Number (comma separated)">
+            <input type="text" id="email" placeholder="Email (must end with @gmail.com)">
 
             <button type="button" onclick="generatePDF()">Generate Biodata PDF</button>
         </form>
