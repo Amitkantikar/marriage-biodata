@@ -1,4 +1,4 @@
-function generatePDF() {
+async function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
@@ -24,7 +24,6 @@ function generatePDF() {
     // Phone number validation (multiple allowed)
     if (phone.trim() !== "") {
         let numbers = phone.split(",").map(n => n.trim());
-
         for (let num of numbers) {
             if (!/^\d{10}$/.test(num)) {
                 alert("Each phone number must be exactly 10 digits.\nInvalid number: " + num);
@@ -40,13 +39,24 @@ function generatePDF() {
     }
 
     // -------------------------------
-    // PDF CONTENT
+    // PDF Title
     // -------------------------------
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(22);
     doc.text("Marriage Biodata", 70, 15);
 
-    let y = 30;
+    // -------------------------------
+    // Add Photo (async handling)
+    // -------------------------------
+    if (photoFile) {
+        const imgData = await fileToBase64(photoFile);
+        doc.addImage(imgData, "JPEG", 150, 20, 40, 45); 
+    }
+
+    // -------------------------------
+    // Add Text
+    // -------------------------------
+    let y = 70;
     doc.setFontSize(14);
 
     function addLine(label, value) {
@@ -56,25 +66,41 @@ function generatePDF() {
         }
     }
 
-    // Add photo if provided
-    if (photoFile) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            doc.addImage(e.target.result, "JPEG", 150, 20, 40, 45); // right side photo
+    addLine("Full Name", fullName);
+    addLine("Date of Birth", dob);
+    addLine("Age", age);
+    addLine("Height", height);
+    addLine("Weight", weight);
+    addLine("Religion", religion);
+    addLine("Caste", caste);
+    addLine("Mother Tongue", motherTongue);
+    addLine("Profession", job);
+    addLine("Education", education);
 
-            // After photo loaded, add text
-            generateText();
-        };
-        reader.readAsDataURL(photoFile);
-    } else {
-        generateText();
-    }
+    doc.setFont("Helvetica", "bold");
+    doc.text("Family Details:", 10, y + 5);
+    doc.setFont("Helvetica", "normal");
+    doc.text(familyDetails, 10, y + 15);
+    y += 35;
 
-    function generateText() {
-        y = 80;
+    addLine("Contact Number(s)", phone);
+    addLine("Email", email);
 
-        addLine("Full Name", fullName);
-        addLine("Date of Birth", dob);
-        addLine("Age", age);
-        addLine("Height", height);
-        addLine("Weight", weight);
+    //-------------------------------
+    // Save PDF
+    //-------------------------------
+    doc.save(`${fullName}_Biodata.pdf`);
+}
+
+
+// -------------------------------
+// Convert image file → Base64
+// -------------------------------
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
