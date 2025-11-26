@@ -1,20 +1,25 @@
 body {
     background: #f7f7f7;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    width: 450px;
-    margin: 30px auto;
+    width: 95%;
+    max-width: 600px; /* Increased from 450px for a better look */
+    margin: 20px auto;
     background: white;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 0 10px #ccc;
 }
 
+/* Responsive heading */
 h1 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 1.8rem;
 }
 
 input, textarea {
@@ -23,8 +28,10 @@ input, textarea {
     margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 1rem;
 }
 
+/* Responsive button */
 button {
     width: 100%;
     padding: 14px;
@@ -34,7 +41,7 @@ button {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1rem;
 }
 
 button:hover {
@@ -43,4 +50,17 @@ button:hover {
 
 textarea {
     height: 80px;
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+    .container {
+        padding: 18px;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    input, textarea, button {
+        font-size: 0.95rem;
+    }
 }
