@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Biodata</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>Create Your Marriage Biodata</h1>
+
+        <form>
+            <label>Full Name</label>
+            <input type="text" id="fullName">
+
+            <label>Age</label>
+            <input type="text" id="age">
+
+            <label>Height</label>
+            <input type="text" id="height">
+
+            <label>Religion</label>
+            <input type="text" id="religion">
+
+            <label>About You</label>
+            <textarea id="aboutme"></textarea>
+
+            <label>Upload Photo</label>
+            <input type="file" id="photo">
+
+            <button type="button" onclick="generatePDF()">Download My Biodata</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
