@@ -3,38 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Your Biodata</title>
+    <title>Create Biodata</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="form.css">
 </head>
 
 <body>
-    <div class="form-container">
-        <h1>Create Your Marriage Biodata</h1>
 
-        <form>
-            <label>Full Name</label>
-            <input type="text" id="fullName">
+<div class="form-wrapper fade-in">
 
-            <label>Age</label>
-            <input type="text" id="age">
+    <h1>Create Your Marriage Biodata</h1>
 
-            <label>Height</label>
-            <input type="text" id="height">
-
-            <label>Religion</label>
-            <input type="text" id="religion">
-
-            <label>About You</label>
-            <textarea id="aboutme"></textarea>
-
-            <label>Upload Photo</label>
-            <input type="file" id="photo">
-
-            <button type="button" onclick="generatePDF()">Download My Biodata</button>
-        </form>
+    <div class="form-section">
+        <h2>Personal Details</h2>
+        <input id="fullName" placeholder="Full Name">
+        <input id="age" placeholder="Age">
+        <input id="dob" placeholder="Date of Birth (DD-MM-YYYY)">
+        <input id="height" placeholder="Height">
+        <input id="religion" placeholder="Religion">
+        <textarea id="aboutme" placeholder="About You"></textarea>
+        <input type="file" id="photo">
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="script.js"></script>
+    <div class="form-section">
+        <h2>Family Background</h2>
+        <input id="fatherName" placeholder="Father's Name">
+        <input id="motherName" placeholder="Mother's Name">
+        <input id="siblings" placeholder="Siblings">
+    </div>
+
+    <div class="form-section">
+        <h2>Contact Details</h2>
+        <input id="phone" placeholder="Phone Number (10 digits)">
+        <input id="email" placeholder="Email (must end with @gmail.com)">
+        <input id="address" placeholder="Address">
+    </div>
+
+    <button onclick="generatePDF()" class="btn-primary pulse">Download My Biodata</button>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
