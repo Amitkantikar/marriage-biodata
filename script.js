@@ -1,106 +1,150 @@
 async function generatePDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF("p", "pt", "a4");
 
-    let fullName = document.getElementById("fullName").value;
-    let dob = document.getElementById("dob").value;
-    let age = document.getElementById("age").value;
-    let height = document.getElementById("height").value;
-    let weight = document.getElementById("weight").value;
-    let religion = document.getElementById("religion").value;
-    let caste = document.getElementById("caste").value;
-    let motherTongue = document.getElementById("motherTongue").value;
-    let job = document.getElementById("job").value;
-    let education = document.getElementById("education").value;
-    let familyDetails = document.getElementById("familyDetails").value;
-    let phone = document.getElementById("phone").value;
-    let email = document.getElementById("email").value;
-    let photoFile = document.getElementById("photo").files[0];
+    const fullName = v("fullName");
+    const dob = v("dob");
+    const age = v("age");
+    const height = v("height");
+    const weight = v("weight");
+    const nationality = v("nationality");
+    const religion = v("religion");
+    const caste = v("caste");
+    const rashi = v("rashi");
+    const languages = v("languages");
+    const job = v("job");
+    const education = v("education");
+    const aboutMe = v("aboutme");
 
-    // -------------------------------
-    // VALIDATION
-    // -------------------------------
+    const fatherName = v("fatherName");
+    const fatherJob = v("fatherJob");
+    const motherName = v("motherName");
+    const motherJob = v("motherJob");
+    const brothers = v("brothers");
+    const sisters = v("sisters");
+    const familyType = v("familyType");
+    const socialClass = v("socialClass");
+    const residence = v("residence");
 
-    // Phone number validation (multiple allowed)
+    const partnerPref = v("partnerPref");
+
+    const phone = v("phone");
+    const email = v("email");
+    const address = v("address");
+
+    const photoFile = document.getElementById("photo").files[0];
+
+    // VALIDATIONS
     if (phone.trim() !== "") {
         let numbers = phone.split(",").map(n => n.trim());
         for (let num of numbers) {
             if (!/^\d{10}$/.test(num)) {
-                alert("Each phone number must be exactly 10 digits.\nInvalid number: " + num);
+                alert("Each phone number must be exactly 10 digits.\nInvalid: " + num);
                 return;
             }
         }
     }
 
-    // Gmail validation
     if (email.trim() !== "" && !email.endsWith("@gmail.com")) {
         alert("Email must end with @gmail.com");
         return;
     }
 
-    // -------------------------------
-    // PDF Title
-    // -------------------------------
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(22);
-    doc.text("Marriage Biodata", 70, 15);
+    // HEADER BAR
+    doc.setFillColor("#4CAF50");
+    doc.rect(0, 0, 595, 70, "F");
 
-    // -------------------------------
-    // Add Photo (async handling)
-    // -------------------------------
+    // NAME
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(26);
+    doc.setTextColor("#fff");
+    doc.text(fullName, 40, 45);
+
+    let y = 100;
+
+    // PHOTO
     if (photoFile) {
-        const imgData = await fileToBase64(photoFile);
-        doc.addImage(imgData, "JPEG", 150, 20, 40, 45); 
+        const imgData = await toBase64(photoFile);
+        doc.addImage(imgData, "JPEG", 40, 100, 130, 160);
     }
 
-    // -------------------------------
-    // Add Text
-    // -------------------------------
-    let y = 70;
-    doc.setFontSize(14);
+    // LEFT DETAILS BLOCK
+    doc.setFontSize(12);
+    doc.setTextColor("#333");
 
-    function addLine(label, value) {
-        if (value.trim() !== "") {
-            doc.text(`${label}: ${value}`, 10, y);
-            y += 8;
+    const rightX = 200;
+    function line(label, value) {
+        if (value) {
+            doc.setFont("Helvetica", "bold");
+            doc.text(label + ": ", rightX, y);
+            doc.setFont("Helvetica", "normal");
+            doc.text(value, rightX + 90, y);
+            y += 18;
         }
     }
 
-    addLine("Full Name", fullName);
-    addLine("Date of Birth", dob);
-    addLine("Age", age);
-    addLine("Height", height);
-    addLine("Weight", weight);
-    addLine("Religion", religion);
-    addLine("Caste", caste);
-    addLine("Mother Tongue", motherTongue);
-    addLine("Profession", job);
-    addLine("Education", education);
+    line("Age", age);
+    line("Date of Birth", dob);
+    line("Height", height);
+    line("Weight", weight);
+    line("Nationality", nationality);
+    line("Religion", religion);
+    line("Caste", caste);
+    line("Rashi", rashi);
+    line("Languages", languages);
+    line("Education", education);
+    line("Profession", job);
 
-    doc.setFont("Helvetica", "bold");
-    doc.text("Family Details:", 10, y + 5);
-    doc.setFont("Helvetica", "normal");
-    doc.text(familyDetails, 10, y + 15);
-    y += 35;
+    // SECTION TEMPLATE
+    function section(title, text) {
+        y += 30;
+        doc.setFillColor("#eef1f5");
+        doc.rect(30, y, 535, 30, "F");
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(14);
+        doc.setTextColor("#333");
+        doc.text(title, 40, y + 20);
+        y += 50;
 
-    addLine("Contact Number(s)", phone);
-    addLine("Email", email);
+        doc.setFont("Helvetica", "normal");
+        doc.setFontSize(12);
+        doc.setTextColor("#444");
+        let split = doc.splitTextToSize(text, 520);
+        doc.text(split, 40, y);
+        y += split.length * 14;
+    }
 
-    //-------------------------------
-    // Save PDF
-    //-------------------------------
-    doc.save(`${fullName}_Biodata.pdf`);
+    section("About Me", aboutMe);
+
+    let familyText = 
+        `Father: ${fatherName} (${fatherJob})\n` +
+        `Mother: ${motherName} (${motherJob})\n` +
+        `Brothers: ${brothers}\nSisters: ${sisters}\n` +
+        `Family Type: ${familyType}\nSocial Class: ${socialClass}\n` +
+        `Residence: ${residence}`;
+
+    section("Family Background", familyText);
+
+    section("Partner Preferences", partnerPref);
+
+    let contactText =
+        `Phone: ${phone}\nEmail: ${email}\nAddress: ${address}`;
+
+    section("Contact Details", contactText);
+
+    // SAVE PDF
+    doc.save(`${fullName}_Modern_Biodata.pdf`);
 }
 
+function v(id) {
+    return document.getElementById(id).value.trim();
+}
 
-// -------------------------------
-// Convert image file → Base64
-// -------------------------------
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+function toBase64(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
     });
 }
