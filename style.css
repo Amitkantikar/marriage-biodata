@@ -1,25 +1,32 @@
 body {
-    background: #f7f7f7;
-    font-family: Arial, sans-serif;
+    background: #eef1f5;
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
 }
 
 .container {
     width: 95%;
-    max-width: 600px; /* Increased from 450px for a better look */
-    margin: 20px auto;
+    max-width: 650px;
+    margin: 25px auto;
     background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #ccc;
+    padding: 25px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* Responsive heading */
 h1 {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8rem;
+    margin-bottom: 25px;
+    font-size: 1.9rem;
+    color: #333;
+}
+
+h2 {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    color: #444;
+    border-left: 4px solid #4CAF50;
+    padding-left: 8px;
 }
 
 input, textarea {
@@ -31,36 +38,24 @@ input, textarea {
     font-size: 1rem;
 }
 
-/* Responsive button */
+textarea {
+    height: 90px;
+    resize: vertical;
+}
+
 button {
     width: 100%;
     padding: 14px;
-    margin-top: 20px;
+    margin-top: 35px;
     background: #4CAF50;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 button:hover {
     background: #45a049;
-}
-
-textarea {
-    height: 80px;
-}
-
-/* Mobile optimization */
-@media (max-width: 480px) {
-    .container {
-        padding: 18px;
-    }
-    h1 {
-        font-size: 1.5rem;
-    }
-    input, textarea, button {
-        font-size: 0.95rem;
-    }
 }
