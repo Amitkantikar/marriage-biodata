@@ -1,150 +1,80 @@
+window.jsPDF = window.jspdf.jsPDF;
+
 async function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF("p", "pt", "a4");
+    const name = document.getElementById("fullName").value;
+    const age = document.getElementById("age").value;
+    const dob = document.getElementById("dob").value;
+    const height = document.getElementById("height").value;
+    const religion = document.getElementById("religion").value;
+    const about = document.getElementById("aboutme").value;
 
-    const fullName = v("fullName");
-    const dob = v("dob");
-    const age = v("age");
-    const height = v("height");
-    const weight = v("weight");
-    const nationality = v("nationality");
-    const religion = v("religion");
-    const caste = v("caste");
-    const rashi = v("rashi");
-    const languages = v("languages");
-    const job = v("job");
-    const education = v("education");
-    const aboutMe = v("aboutme");
+    const father = document.getElementById("fatherName").value;
+    const mother = document.getElementById("motherName").value;
+    const siblings = document.getElementById("siblings").value;
 
-    const fatherName = v("fatherName");
-    const fatherJob = v("fatherJob");
-    const motherName = v("motherName");
-    const motherJob = v("motherJob");
-    const brothers = v("brothers");
-    const sisters = v("sisters");
-    const familyType = v("familyType");
-    const socialClass = v("socialClass");
-    const residence = v("residence");
-
-    const partnerPref = v("partnerPref");
-
-    const phone = v("phone");
-    const email = v("email");
-    const address = v("address");
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+    const address = document.getElementById("address").value;
 
     const photoFile = document.getElementById("photo").files[0];
 
-    // VALIDATIONS
-    if (phone.trim() !== "") {
-        let numbers = phone.split(",").map(n => n.trim());
-        for (let num of numbers) {
-            if (!/^\d{10}$/.test(num)) {
-                alert("Each phone number must be exactly 10 digits.\nInvalid: " + num);
-                return;
-            }
-        }
-    }
+    const doc = new jsPDF("p", "pt", "a4");
 
-    if (email.trim() !== "" && !email.endsWith("@gmail.com")) {
-        alert("Email must end with @gmail.com");
-        return;
-    }
+    // Background
+    doc.setFillColor(255, 247, 234);
+    doc.rect(0, 0, 595, 842, "F");
 
-    // HEADER BAR
-    doc.setFillColor("#4CAF50");
-    doc.rect(0, 0, 595, 70, "F");
-
-    // NAME
+    // Title
     doc.setFont("Helvetica", "bold");
-    doc.setFontSize(26);
-    doc.setTextColor("#fff");
-    doc.text(fullName, 40, 45);
+    doc.setFontSize(24);
+    doc.text("Marriage Biodata", 200, 50);
 
-    let y = 100;
-
-    // PHOTO
+    // If photo uploaded
     if (photoFile) {
-        const imgData = await toBase64(photoFile);
-        doc.addImage(imgData, "JPEG", 40, 100, 130, 160);
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            doc.addImage(e.target.result, "JPEG", 400, 70, 150, 180);
+            finishPDF();
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        finishPDF();
     }
 
-    // LEFT DETAILS BLOCK
-    doc.setFontSize(12);
-    doc.setTextColor("#333");
-
-    const rightX = 200;
-    function line(label, value) {
-        if (value) {
-            doc.setFont("Helvetica", "bold");
-            doc.text(label + ": ", rightX, y);
-            doc.setFont("Helvetica", "normal");
-            doc.text(value, rightX + 90, y);
-            y += 18;
-        }
-    }
-
-    line("Age", age);
-    line("Date of Birth", dob);
-    line("Height", height);
-    line("Weight", weight);
-    line("Nationality", nationality);
-    line("Religion", religion);
-    line("Caste", caste);
-    line("Rashi", rashi);
-    line("Languages", languages);
-    line("Education", education);
-    line("Profession", job);
-
-    // SECTION TEMPLATE
-    function section(title, text) {
-        y += 30;
-        doc.setFillColor("#eef1f5");
-        doc.rect(30, y, 535, 30, "F");
-        doc.setFont("Helvetica", "bold");
+    function finishPDF() {
         doc.setFontSize(14);
-        doc.setTextColor("#333");
-        doc.text(title, 40, y + 20);
-        y += 50;
+        doc.setFont("Helvetica", "bold");
+        doc.text("Personal Details", 40, 90);
 
         doc.setFont("Helvetica", "normal");
-        doc.setFontSize(12);
-        doc.setTextColor("#444");
-        let split = doc.splitTextToSize(text, 520);
-        doc.text(split, 40, y);
-        y += split.length * 14;
+
+        doc.text(`Name: ${name}`, 40, 120);
+        doc.text(`Age: ${age}`, 40, 140);
+        doc.text(`Date of Birth: ${dob}`, 40, 160);
+        doc.text(`Height: ${height}`, 40, 180);
+        doc.text(`Religion: ${religion}`, 40, 200);
+
+        doc.text("About Me:", 40, 230);
+        doc.text(doc.splitTextToSize(about, 500), 40, 250);
+
+        // FAMILY
+        doc.setFont("Helvetica", "bold");
+        doc.text("Family Details", 40, 340);
+
+        doc.setFont("Helvetica", "normal");
+        doc.text(`Father's Name: ${father}`, 40, 370);
+        doc.text(`Mother's Name: ${mother}`, 40, 390);
+        doc.text(`Siblings: ${siblings}`, 40, 410);
+
+        // CONTACT
+        doc.setFont("Helvetica", "bold");
+        doc.text("Contact Details", 40, 460);
+
+        doc.setFont("Helvetica", "normal");
+        doc.text(`Phone: ${phone}`, 40, 490);
+        doc.text(`Email: ${email}`, 40, 510);
+        doc.text(doc.splitTextToSize(`Address: ${address}`, 500), 40, 530);
+
+        doc.save(`${name}-Biodata.pdf`);
     }
-
-    section("About Me", aboutMe);
-
-    let familyText = 
-        `Father: ${fatherName} (${fatherJob})\n` +
-        `Mother: ${motherName} (${motherJob})\n` +
-        `Brothers: ${brothers}\nSisters: ${sisters}\n` +
-        `Family Type: ${familyType}\nSocial Class: ${socialClass}\n` +
-        `Residence: ${residence}`;
-
-    section("Family Background", familyText);
-
-    section("Partner Preferences", partnerPref);
-
-    let contactText =
-        `Phone: ${phone}\nEmail: ${email}\nAddress: ${address}`;
-
-    section("Contact Details", contactText);
-
-    // SAVE PDF
-    doc.save(`${fullName}_Modern_Biodata.pdf`);
-}
-
-function v(id) {
-    return document.getElementById(id).value.trim();
-}
-
-function toBase64(file) {
-    return new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload = () => res(r.result);
-        r.onerror = rej;
-        r.readAsDataURL(file);
-    });
 }
