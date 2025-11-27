@@ -1,6 +1,7 @@
 window.jsPDF = window.jspdf.jsPDF;
 
 async function generatePDF() {
+
     const name = v("fullName");
     const age = v("age");
     const dob = v("dob");
@@ -20,11 +21,11 @@ async function generatePDF() {
 
     const doc = new jsPDF("p", "pt", "a4");
 
-    // Background aesthetic
+    // Background
     doc.setFillColor("#fdf6ee");
     doc.rect(0, 0, 595, 842, "F");
 
-    // Header
+    // Header Bar
     doc.setFillColor("#ff7b00");
     doc.rect(0, 0, 595, 80, "F");
 
@@ -33,46 +34,48 @@ async function generatePDF() {
     doc.setTextColor("#fff");
     doc.text("Marriage Biodata", 200, 50);
 
-    // PHOTO BLOCK
-    let photoY = 110;
-    if (photoFile) {
-        const image = await fileToBase64(photoFile);
-        doc.setFillColor("#ffffff");
-        doc.rect(400, photoY - 10, 150, 200, "F");
-        doc.addImage(image, "JPEG", 408, photoY, 135, 180);
-    }
-
-    // LEFT COLUMN X POSITIONS
+    // --- LAYOUT COORDINATES ---
     const leftX = 40;
     let y = 110;
 
-    // SECTION TITLE FUNCTION
+    // PHOTO SECTION (RIGHT)
+    if (photoFile) {
+        const img = await fileToBase64(photoFile);
+
+        // Professional Photo Frame
+        doc.setFillColor("#ffffff");
+        doc.roundedRect(380, 110, 170, 220, 10, 10, "F");
+
+        // Perfect aspect-ratio photo
+        doc.addImage(img, "JPEG", 390, 120, 150, 200);
+    }
+
+    // --- SECTION MAKER ---
     function section(title) {
-        doc.setFillColor("#fff1dd");
-        doc.rect(leftX - 10, y - 15, 530, 35, "F");
+        doc.setFillColor("#ffe9cc");
+        doc.roundedRect(leftX - 10, y, 330, 28, 6, 6, "F");
 
         doc.setFont("Helvetica", "bold");
-        doc.setFontSize(18);
+        doc.setFontSize(16);
         doc.setTextColor("#ff7b00");
-        doc.text(title, leftX, y + 5);
+        doc.text(title, leftX, y + 18);
 
-        y += 40;
+        y += 45;
 
         doc.setFont("Helvetica", "normal");
         doc.setFontSize(13);
         doc.setTextColor("#444");
     }
 
-    // BULLET FUNCTION
+    // --- BULLET MAKER ---
     function bullet(text) {
         doc.circle(leftX + 2, y - 4, 2, "F");
-        doc.text(text, leftX + 10, y);
+        doc.text(text, leftX + 12, y);
         y += 20;
     }
 
     // PERSONAL DETAILS
     section("Personal Details");
-
     bullet(`Name: ${name}`);
     bullet(`Age: ${age}`);
     bullet(`Date of Birth: ${dob}`);
@@ -81,27 +84,23 @@ async function generatePDF() {
 
     // ABOUT ME
     section("About Me");
+    doc.text(doc.splitTextToSize(about, 350), leftX + 10, y);
+    y += doc.getTextDimensions(about).h + 25;
 
-    const aboutLines = doc.splitTextToSize(about, 480);
-    aboutLines.forEach(line => {
-        bullet(line);
-    });
-
-    // FAMILY DETAILS
+    // FAMILY
     section("Family Background");
-
     bullet(`Father: ${father}`);
     bullet(`Mother: ${mother}`);
     bullet(`Siblings: ${siblings}`);
 
-    // CONTACT DETAILS
+    // CONTACT
     section("Contact Details");
-
     bullet(`Phone: ${phone}`);
     bullet(`Email: ${email}`);
-    bullet(`Address: ${address}`);
+    doc.text(doc.splitTextToSize(`Address: ${address}`, 350), leftX + 12, y);
+    y += 40;
 
-    // SAVE FILE
+    // Save PDF
     doc.save(`${name}-Biodata.pdf`);
 }
 
